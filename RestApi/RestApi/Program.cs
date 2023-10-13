@@ -1,3 +1,7 @@
+using RestApi.DataAccessLayer;
+using RestApi.Models.Contexts;
+using RestApi.Models.Entities;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +10,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<MovieContext>();
+builder.Services.AddScoped<IDal<GuestEntity>, SqLiteDal<GuestEntity>>();
+builder.Services.AddScoped<IDal<MovieEntity>, SqLiteDal<MovieEntity>>();
 
 var app = builder.Build();
 
