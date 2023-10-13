@@ -3,7 +3,7 @@ using RestApi.Models.Entities;
 
 namespace RestApi.DataAccessLayer
 {
-    public class SqLiteDal<T> : IDal<T> where T : class
+    public abstract class SqLiteDal<T> : IDal<T> where T : class
     {
         private MovieContext _movieContext;
         public SqLiteDal(MovieContext context)
@@ -39,21 +39,8 @@ namespace RestApi.DataAccessLayer
             return result.Entity;
         }
 
-        public async Task<T?> GetOne(int id)
-        {
-            return await _movieContext.FindAsync<T>(new int[] { id });
-        }
+        public abstract Task<T?> GetOne(T el);
 
-        public IQueryable<T>? GetAll()
-        {
-            if(typeof(T) is GuestEntity)
-            {
-                return this._movieContext.Guests.AsQueryable() as IQueryable<T>;
-            }
-            else
-            {
-                return this._movieContext.Movies.AsQueryable() as IQueryable<T>;
-            }
-        }
+        public abstract IQueryable<T>? GetAll();
     }
 }

@@ -4,11 +4,10 @@ using System.Text.Json.Serialization;
 
 namespace RestApi.Models.Dtos
 {
-    public class GuestDto : AbstractDto<GuestEntity>
+    public class GuestDto : IDto<GuestEntity>
     {
-        public GuestDto(int id) : base(id)
-        {
-        }
+        [JsonPropertyName("id")]
+        public int? Id { get; set; }
 
         [JsonPropertyName("firstName")]
         public string FirstName { get; set; }
@@ -17,23 +16,32 @@ namespace RestApi.Models.Dtos
         public string LastName { get; set; }
 
         [JsonPropertyName("birthDate")]
-        public DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
 
 
-        [JsonPropertyName("role")]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public Role Role { get; set; }
+        [JsonPropertyName("movies")]
+        public List<MovieSimplifiedDto> Movies { get; set; } = new List<MovieSimplifiedDto>();
 
 
-        public override GuestEntity ToEntity()
+        public GuestEntity ToEntity()
         {
-            return new GuestEntity()
+            var result =  new GuestEntity()
             {
                 Id = this.Id,
                 FirstName = this.FirstName,
                 LastName = this.LastName,
-                BirthDate = this.BirthDate
+                BirthDate = this.BirthDate,
             };
+
+            Movies.ForEach(el =>
+            {
+                result.Movies.Add(new MovieEntity()
+                {
+                    Id = el.Id,
+                });
+            });
+
+            return result;
         }
     }
 }

@@ -7,6 +7,7 @@ namespace RestApi.Models.Contexts
     {
         public DbSet<MovieEntity> Movies { get; set; }
         public DbSet<GuestEntity> Guests { get; set; }
+        public DbSet<RelationEntity> Relations { get; set; }
 
         public string DbPath { get; }
 

@@ -3,34 +3,46 @@ using System.Text.Json.Serialization;
 
 namespace RestApi.Models.Dtos
 {
-    public class MovieDto: AbstractDto<MovieEntity>
+    public class MovieDto: IDto<MovieEntity>
     {
-        public MovieDto(int id) : base(id)
-        {
-        }
+        [JsonPropertyName("id")]
+        public int? Id { get; set; }
 
         [JsonPropertyName("name")]
         public string Name { get; set; }
 
         [JsonPropertyName("releaseDate")]
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
         [JsonPropertyName("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [JsonPropertyName("guests")]
-        public List<GuestDto> Guests { get; set; } = new List<GuestDto>();
+        public List<GuestSimplifiedDto>? Guests { get; set; } = new List<GuestSimplifiedDto>();
 
 
-        public override MovieEntity ToEntity()
+        public MovieEntity ToEntity()
         {
-            return new MovieEntity()
+            var result = new MovieEntity()
             {
                 Id = this.Id,
                 Name = this.Name,
                 Description = this.Description,
-                Guests = this.Guests.Select(g => g.ToEntity()).ToList()
+                ReleaseDate = this.ReleaseDate,
             };
+
+            Guests.ForEach(g =>
+            {
+                result.Guests.Add(new GuestEntity()
+                {
+                    Id = g.Id,
+
+                });
+
+
+            });
+
+            return result;
         }
     }
 }

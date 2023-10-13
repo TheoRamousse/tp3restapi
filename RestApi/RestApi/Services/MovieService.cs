@@ -4,33 +4,43 @@ using RestApi.Models.Entities;
 
 namespace RestApi.Services
 {
-    public class ElementService<TDto, TEntity> where TEntity : IEntity<TDto> where TDto : AbstractDto<TEntity>
+    public class MovieService : IElementService<MovieDto, MovieEntity>
     {
-        private IDal<TEntity> _dal;
-        public ElementService(IDal<TEntity> dal)
+        private readonly IDal<MovieEntity> _dal;
+        private readonly IDal<RelationEntity> _dalRelation;
+        public MovieService(IDal<MovieEntity> dal, IDal<RelationEntity> dalRelation)
         {
             _dal = dal;
+            _dalRelation = dalRelation;
         }
 
-        public async Task<TDto?> InsertElement(TDto element)
+        public async Task<MovieDto?> InsertElement(MovieDto element)
         {
-            return (await _dal.Add(element.ToEntity())).ToDto();
+            var entity = element.ToEntity();
+
+            return (await _dal.Add(entity)).ToDto();
         }
 
-        public TDto? DeleteElement(int id)
+        public MovieDto? DeleteElement(int id)
         {
-            var element = typeof(TDto).GetConstructor(new[] { typeof(int) })!.Invoke(new object[] { id }) as TDto;
+            var element = new MovieDto()
+            {
+                Id = id,
+            };
             return _dal.Remove(element!.ToEntity()).ToDto();
         }
 
-        public TDto? UpdateElement(TDto element)
+        public MovieDto? UpdateElement(MovieDto element)
         {
             return (_dal.Update(element.ToEntity())).ToDto();
         }
 
-        public async Task<TDto?> GetElementById(int id)
+        public async Task<MovieDto?> GetElementById(int id)
         {
-            var resultAsEntity = await _dal.GetOne(id);
+            var resultAsEntity = await _dal.GetOne(new MovieEntity()
+            {
+                Id = id
+            });
 
             if(resultAsEntity == null)
                 return default;
@@ -38,7 +48,7 @@ namespace RestApi.Services
                 return resultAsEntity.ToDto();
         }
 
-        public Page<TDto?> GetPagedElements(int page, int nbElementsPerPage)
+        public Page<MovieDto?> GetPagedElements(int page, int nbElementsPerPage)
         {
             var resultsAsEntity = _dal.GetAll();
 

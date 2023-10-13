@@ -1,6 +1,8 @@
 using RestApi.DataAccessLayer;
 using RestApi.Models.Contexts;
+using RestApi.Models.Dtos;
 using RestApi.Models.Entities;
+using RestApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<MovieContext>();
 builder.Services.AddScoped<IDal<GuestEntity>, SqLiteDal<GuestEntity>>();
 builder.Services.AddScoped<IDal<MovieEntity>, SqLiteDal<MovieEntity>>();
+builder.Services.AddScoped<IElementService<MovieDto, MovieEntity>, MovieService>();
 
 var app = builder.Build();
 
