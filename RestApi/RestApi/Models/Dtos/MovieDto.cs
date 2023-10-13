@@ -1,11 +1,13 @@
-﻿using System.Text.Json.Serialization;
+﻿using RestApi.Models.Entities;
+using System.Text.Json.Serialization;
 
 namespace RestApi.Models.Dtos
 {
-    public class MovieDto
+    public class MovieDto: AbstractDto<MovieEntity>
     {
-        [JsonPropertyName("id")]
-        public int Id { get; set; }
+        public MovieDto(int id) : base(id)
+        {
+        }
 
         [JsonPropertyName("name")]
         public string Name { get; set; }
@@ -18,5 +20,17 @@ namespace RestApi.Models.Dtos
 
         [JsonPropertyName("guests")]
         public List<GuestDto> Guests { get; set; } = new List<GuestDto>();
+
+
+        public override MovieEntity ToEntity()
+        {
+            return new MovieEntity()
+            {
+                Id = this.Id,
+                Name = this.Name,
+                Description = this.Description,
+                Guests = this.Guests.Select(g => g.ToEntity()).ToList()
+            };
+        }
     }
 }

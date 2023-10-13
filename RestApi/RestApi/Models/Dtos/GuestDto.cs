@@ -1,12 +1,14 @@
 ﻿using Newtonsoft.Json.Converters;
+using RestApi.Models.Entities;
 using System.Text.Json.Serialization;
 
 namespace RestApi.Models.Dtos
 {
-    public class GuestDto
+    public class GuestDto : AbstractDto<GuestEntity>
     {
-        [JsonPropertyName("id")]
-        public int Id { get; set; }
+        public GuestDto(int id) : base(id)
+        {
+        }
 
         [JsonPropertyName("firstName")]
         public string FirstName { get; set; }
@@ -21,5 +23,17 @@ namespace RestApi.Models.Dtos
         [JsonPropertyName("role")]
         [JsonConverter(typeof(StringEnumConverter))]
         public Role Role { get; set; }
+
+
+        public override GuestEntity ToEntity()
+        {
+            return new GuestEntity()
+            {
+                Id = this.Id,
+                FirstName = this.FirstName,
+                LastName = this.LastName,
+                BirthDate = this.BirthDate
+            };
+        }
     }
 }
