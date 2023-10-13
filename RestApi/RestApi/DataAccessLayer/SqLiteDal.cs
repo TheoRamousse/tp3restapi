@@ -1,4 +1,5 @@
 ﻿using RestApi.Models.Contexts;
+using RestApi.Models.Entities;
 
 namespace RestApi.DataAccessLayer
 {
@@ -10,9 +11,9 @@ namespace RestApi.DataAccessLayer
             this._movieContext = context;
         }
 
-        public T Add(T el)
+        public async Task<T> Add(T el)
         {
-            var result = _movieContext.Add<T>(el);
+            var result = await _movieContext.AddAsync<T>(el);
             _movieContext.SaveChanges();
             return result.Entity;
         }
@@ -36,6 +37,23 @@ namespace RestApi.DataAccessLayer
             var result = _movieContext.Remove<T>(el);
             _movieContext.SaveChanges();
             return result.Entity;
+        }
+
+        public async Task<T?> GetOne(int id)
+        {
+            return await _movieContext.FindAsync<T>(new int[] { id });
+        }
+
+        public IQueryable<T>? GetAll()
+        {
+            if(typeof(T) is GuestEntity)
+            {
+                return this._movieContext.Guests.AsQueryable() as IQueryable<T>;
+            }
+            else
+            {
+                return this._movieContext.Movies.AsQueryable() as IQueryable<T>;
+            }
         }
     }
 }
