@@ -33,14 +33,14 @@ namespace RestApi.Models
 
     public static class GuestDtoExtension
     {
-        public static MovieEntity ToEntity(this MovieDto dto)
+        public static GuestEntity ToEntity(this GuestDto dto)
         {
-            return new MovieEntity()
+            return new GuestEntity()
             {
                 Id = dto.Id,
-                Name = dto.Name,
-                Description = dto.Description,
-                Guests = dto.Guests.Select(g => g.ToEntity()).ToList()
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                BirthDate = dto.BirthDate
             };
         }
     }
