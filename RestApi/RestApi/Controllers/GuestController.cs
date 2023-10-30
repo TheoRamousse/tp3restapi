@@ -70,8 +70,8 @@ namespace RestApi.Controllers
             }
         }
 
-        [HttpPatch(Name = "PatchGuest")]
-        public IActionResult Patch([FromBody] object data)
+        [HttpPut(Name = "PutGuest")]
+        public IActionResult Put([FromBody] object data)
         {
             GuestDto elementAsDto = null;
             try

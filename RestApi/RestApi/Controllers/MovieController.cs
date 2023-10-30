@@ -71,8 +71,8 @@ namespace RestApi.Controllers
 
 
 
-        [HttpPatch(Name = "PatchMovie")]
-        public IActionResult Patch([FromBody] object data)
+        [HttpPut(Name = "PutMovie")]
+        public IActionResult Put([FromBody] object data)
         {
             MovieDto elementAsDto = null;
             try
