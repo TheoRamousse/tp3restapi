@@ -21,7 +21,7 @@ namespace RestApi.Controllers
             _elementService = elementService;
         }
 
-        [HttpGet(Name = "GetPagedGuests")]
+        [HttpGet("", Name = "GetPagedGuests")]
         public IActionResult Get(int page, int itemInPage = 10)
         {
             var result = _elementService.GetPagedElements(page, itemInPage);
@@ -34,6 +34,7 @@ namespace RestApi.Controllers
                 return NoContent();
             }
         }
+
 
         [HttpPost(Name = "AddGuest")]
         public IActionResult Post([FromBody] object data)
@@ -100,6 +101,34 @@ namespace RestApi.Controllers
             else
             {
                 return BadRequest(validationErrors);
+            }
+        }
+
+        [HttpDelete("{id}", Name = "DeleteGuest")]
+        public IActionResult DeleteById(int id)
+        {
+            var result = _elementService.DeleteElement(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NoContent();
+            }
+        }
+
+        [HttpGet("{id}", Name = "GetGuest")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var result = await _elementService.GetElementById(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NoContent();
             }
         }
     }

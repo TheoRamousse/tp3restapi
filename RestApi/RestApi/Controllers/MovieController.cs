@@ -21,7 +21,7 @@ namespace RestApi.Controllers
             _elementService = service;
         }
 
-        [HttpGet(Name = "GetPagedMovies")]
+        [HttpGet("", Name = "GetPagedMovies")]
         public IActionResult Get(int page, int itemInPage = 10)
         {
             var result = _elementService.GetPagedElements(page, itemInPage);
@@ -38,7 +38,7 @@ namespace RestApi.Controllers
         [HttpPost(Name = "AddMovie")]
         public IActionResult Post([FromBody] object data)
         {
-            MovieDto elementAsDto = null;
+            MovieDto? elementAsDto = null;
             try
             {
                 _logger.LogInformation(data.ToString());
@@ -102,6 +102,36 @@ namespace RestApi.Controllers
             else
             {
                 return BadRequest(validationErrors);
+            }
+        }
+
+
+        [HttpDelete("{id}", Name = "DeleteMovie")]
+        public IActionResult DeleteById(int id)
+        {
+            var result = _elementService.DeleteElement(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NoContent();
+            }
+        }
+
+
+        [HttpGet("{id}", Name = "GetMovie")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var result = await _elementService.GetElementById(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NoContent();
             }
         }
     }
