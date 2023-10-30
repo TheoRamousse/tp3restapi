@@ -14,23 +14,18 @@ namespace RestApi.DataAccessLayer
 
         public override async Task<GuestEntity?> GetOne(int id)
         {
-            return _movieContext.Guests.AsNoTracking().Single(p => p.Id == id);
+            return await _movieContext.Guests.Include(p => p.Relations).ThenInclude(p => p.Movie).AsQueryable().FirstOrDefaultAsync(el => el.Id == id);
         }
 
         public override IQueryable<GuestEntity>? GetAll()
         {
-            return this._movieContext.Guests.AsQueryable() as IQueryable<GuestEntity>;
+            return this._movieContext.Guests.Include(p => p.Relations).ThenInclude(p => p.Movie).AsQueryable() as IQueryable<GuestEntity>;
         }
 
 
         public override GuestEntity? Update(GuestEntity e)
         {
-            /*List<int?> listOfActorsId = e.Movies.Select(g => g.Id).ToList();
-
-            e.Movies.Clear();
-
-            e.Movies.AddRange(_movieContext.Movies.AsQueryable().Where(g => listOfActorsId.Contains(g.Id)).AsEnumerable());*/
-
+            
             _movieContext.Update(e);
 
             _movieContext.SaveChanges();

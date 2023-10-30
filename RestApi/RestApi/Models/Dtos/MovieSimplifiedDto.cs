@@ -1,4 +1,5 @@
-﻿using RestApi.Models.Entities;
+﻿using Newtonsoft.Json.Converters;
+using RestApi.Models.Entities;
 using System.Text.Json.Serialization;
 
 namespace RestApi.Models.Dtos

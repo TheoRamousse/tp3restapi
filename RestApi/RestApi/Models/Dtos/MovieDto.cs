@@ -31,19 +31,6 @@ namespace RestApi.Models.Dtos
                 ReleaseDate = this.ReleaseDate,
             };
 
-            Guests.ForEach(g =>
-            {
-                result.Relations.Add(new RelationEntity()
-                {
-                    GuestId = (int)g.Id,
-                    MovieId = (int)Id,
-                    Role = (int)g.Role,
-
-                });
-
-
-            });
-
             return result;
         }
     }

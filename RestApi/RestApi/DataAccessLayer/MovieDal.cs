@@ -14,7 +14,7 @@ namespace RestApi.DataAccessLayer
 
         public override async Task<MovieEntity?> GetOne(int id)
         {
-            return await _movieContext.FindAsync<MovieEntity>(id);
+            return await _movieContext.Movies.Include(p => p.Relations).ThenInclude(p => p.Guest).AsQueryable().FirstOrDefaultAsync(el => el.Id == id); ;
         }
 
         public override IQueryable<MovieEntity>? GetAll()

@@ -68,5 +68,39 @@ namespace RestApi.Controllers
                 return BadRequest(validationErrors);
             }
         }
+
+        [HttpPatch(Name = "PatchGuest")]
+        public IActionResult Patch([FromBody] object data)
+        {
+            GuestDto elementAsDto = null;
+            try
+            {
+                _logger.LogInformation(data.ToString());
+                elementAsDto = JsonConvert.DeserializeObject<GuestDto>(data.ToString());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest("Le corps de la requête est vide ou une date renseignée est invalide");
+            }
+
+            var validationErrors = GuestValidator.Validate(elementAsDto);
+            if (validationErrors == null || validationErrors.Count() == 0)
+            {
+                var result = _elementService.UpdateElement(elementAsDto);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
+            else
+            {
+                return BadRequest(validationErrors);
+            }
+        }
     }
 }

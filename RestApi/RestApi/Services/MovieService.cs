@@ -7,12 +7,10 @@ namespace RestApi.Services
     public class MovieService : IElementService<MovieDto, MovieEntity>
     {
         private readonly IDal<MovieEntity> _dal;
-        private readonly IDal<RelationEntity> _dalRelation;
         private readonly IDal<GuestEntity> _dalGuest;
-        public MovieService(IDal<MovieEntity> dal, IDal<RelationEntity> dalRelation, IDal<GuestEntity> dalGuest)
+        public MovieService(IDal<MovieEntity> dal, IDal<GuestEntity> dalGuest)
         {
             _dal = dal;
-            _dalRelation = dalRelation;
             _dalGuest = dalGuest;
         }
 
@@ -34,18 +32,30 @@ namespace RestApi.Services
 
         public async Task<MovieDto?> UpdateElement(MovieDto element)
         {
-            var entity = element.ToEntity();
+            var entity = await _dal.GetOne((int)element.Id);
 
-            entity.Relations.Clear();
+
+            foreach(var relation in entity.Relations.ToList())
+            {
+                if(element.Guests.Where(el => el.Id == relation.GuestId).Count() == 0)
+                    entity.Relations.Remove(relation);
+            }
 
             element.Guests.ForEach(async x =>
             {
-                entity.Relations.Add(new RelationEntity()
+                if (entity.Relations.Where(el => el.GuestId == x.Id).Count() == 0)
                 {
-                    Guest = await _dalGuest.GetOne((int)x.Id),
-                    Movie = entity,
-                    Role = (int)x.Role
-                });
+                    entity.Relations.Add(new RelationEntity()
+                    {
+                        GuestId = (int)x.Id,
+                        Movie = entity,
+                        Role = (int)x.Role
+                    });
+                }
+                else
+                {
+                    entity.Relations.First(el => el.GuestId == (int)x.Id).Role = (int)x.Role;
+                }
             });
 
             return (_dal.Update(entity)).ToDto();
@@ -85,7 +95,6 @@ namespace RestApi.Services
             else
             {
                 var listOfResults = resultsAsEntity.Skip(page * nbElementsPerPage).Take(nbElementsPerPage).ToList().Select(x => x.ToDto()).ToList()!;
-                var toto = _dalRelation.GetAll().ToList();
 
                 int nextPage = page;
 

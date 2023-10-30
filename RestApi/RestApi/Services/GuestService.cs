@@ -7,11 +7,11 @@ namespace RestApi.Services
     public class GuestService : IElementService<GuestDto, GuestEntity>
     {
         private readonly IDal<GuestEntity> _dal;
-        private readonly IDal<RelationEntity> _dalRelation;
-        public GuestService(IDal<GuestEntity> dal, IDal<RelationEntity> dalRelation)
+        private readonly IDal<MovieEntity> _dalMovie;
+        public GuestService(IDal<GuestEntity> dal, IDal<MovieEntity> dalMovie)
         {
             _dal = dal;
-            _dalRelation = dalRelation;
+            _dalMovie = dalMovie;
         }
 
         public async Task<GuestDto?> InsertElement(GuestDto element)
@@ -30,10 +30,35 @@ namespace RestApi.Services
             return _dal.Remove(element!.ToEntity()).ToDto();
         }
 
-        public Task<GuestDto?> UpdateElement(GuestDto element)
+        public async Task<GuestDto?> UpdateElement(GuestDto element)
         {
-            //return (_dal.Update(element.ToEntity())).ToDto();
-            return null;
+            var entity = await _dal.GetOne((int)element.Id);
+
+
+            foreach (var relation in entity.Relations.ToList())
+            {
+                if (element.Movies.Where(el => el.Id == relation.MovieId).Count() == 0)
+                    entity.Relations.Remove(relation);
+            }
+
+            element.Movies.ForEach(async x =>
+                {
+                    if (entity.Relations.Where(el => el.GuestId == x.Id).Count() == 0)
+                    {
+                        entity.Relations.Add(new RelationEntity()
+                        {
+                            MovieId = (int)x.Id,
+                            Guest = entity,
+                            Role = (int)x.Role
+                        });
+                    }
+                    else
+                    {
+                        entity.Relations.First(el => el.MovieId == (int)x.Id).Role = (int)x.Role;
+                    }
+                });
+
+                return (_dal.Update(entity)).ToDto();
         }
 
         public async Task<GuestDto?> GetElementById(int id)
