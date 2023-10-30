@@ -35,12 +35,12 @@ namespace RestApi.Models.Dtos
 
             Movies.ForEach(el =>
             {
-                result.Movies.Add(new MovieEntity()
+                result.Relations.Add(new RelationEntity()
                 {
-                    Id = el.Id,
+                    GuestId = (int)el.Id,
+                    MovieId = (int)this.Id
                 });
             });
-
             return result;
         }
     }

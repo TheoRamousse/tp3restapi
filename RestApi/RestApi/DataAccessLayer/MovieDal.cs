@@ -1,4 +1,5 @@
-﻿using RestApi.Models.Contexts;
+﻿using Microsoft.EntityFrameworkCore;
+using RestApi.Models.Contexts;
 using RestApi.Models.Entities;
 
 namespace RestApi.DataAccessLayer
@@ -11,14 +12,24 @@ namespace RestApi.DataAccessLayer
             this._movieContext = context;
         }
 
-        public override async Task<MovieEntity?> GetOne(MovieEntity el)
+        public override async Task<MovieEntity?> GetOne(int id)
         {
-            return await _movieContext.FindAsync<MovieEntity>(new int[] { (int)el.Id });
+            return await _movieContext.FindAsync<MovieEntity>(id);
         }
 
         public override IQueryable<MovieEntity>? GetAll()
         {
-            return this._movieContext.Movies.AsQueryable() as IQueryable<MovieEntity>;
+            return this._movieContext.Movies.Include(p => p.Relations).ThenInclude(p => p.Guest).AsQueryable() as IQueryable<MovieEntity>;
+        }
+
+        public override MovieEntity? Update(MovieEntity e)
+        {
+
+            _movieContext.Update(e);
+
+            _movieContext.SaveChanges();
+
+            return e;
         }
     }
 }

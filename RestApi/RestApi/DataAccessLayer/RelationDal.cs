@@ -12,14 +12,23 @@ namespace RestApi.DataAccessLayer
         }
 
 
-        public override async Task<RelationEntity?> GetOne(RelationEntity el)
+        public override async Task<RelationEntity?> GetOne(int id)
         {
-            return await _movieContext.FindAsync<RelationEntity>(new int[] { (int)el.GuestsId, (int)el.MoviesId });
+            throw new NotImplementedException();
         }
 
         public override IQueryable<RelationEntity>? GetAll()
         {
             return this._movieContext.Relations.AsQueryable() as IQueryable<RelationEntity>;
+        }
+
+        public override RelationEntity? Update(RelationEntity e)
+        {
+            _movieContext.Update(e);
+
+            _movieContext.SaveChanges();
+
+            return e;
         }
     }
 }

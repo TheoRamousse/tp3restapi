@@ -4,54 +4,39 @@ using RestApi.Models.Entities;
 
 namespace RestApi.Services
 {
-    public class MovieService : IElementService<MovieDto, MovieEntity>
+    public class GuestService : IElementService<GuestDto, GuestEntity>
     {
-        private readonly IDal<MovieEntity> _dal;
+        private readonly IDal<GuestEntity> _dal;
         private readonly IDal<RelationEntity> _dalRelation;
-        private readonly IDal<GuestEntity> _dalGuest;
-        public MovieService(IDal<MovieEntity> dal, IDal<RelationEntity> dalRelation, IDal<GuestEntity> dalGuest)
+        public GuestService(IDal<GuestEntity> dal, IDal<RelationEntity> dalRelation)
         {
             _dal = dal;
             _dalRelation = dalRelation;
-            _dalGuest = dalGuest;
         }
 
-        public async Task<MovieDto?> InsertElement(MovieDto element)
+        public async Task<GuestDto?> InsertElement(GuestDto element)
         {
             var entity = element.ToEntity();
 
             return (await _dal.Add(entity)).ToDto();
         }
 
-        public MovieDto? DeleteElement(int id)
+        public GuestDto? DeleteElement(int id)
         {
-            var element = new MovieDto()
+            var element = new GuestDto()
             {
                 Id = id,
             };
             return _dal.Remove(element!.ToEntity()).ToDto();
         }
 
-        public async Task<MovieDto?> UpdateElement(MovieDto element)
+        public Task<GuestDto?> UpdateElement(GuestDto element)
         {
-            var entity = element.ToEntity();
-
-            entity.Relations.Clear();
-
-            element.Guests.ForEach(async x =>
-            {
-                entity.Relations.Add(new RelationEntity()
-                {
-                    Guest = await _dalGuest.GetOne((int)x.Id),
-                    Movie = entity,
-                    Role = (int)x.Role
-                });
-            });
-
-            return (_dal.Update(entity)).ToDto();
+            //return (_dal.Update(element.ToEntity())).ToDto();
+            return null;
         }
 
-        public async Task<MovieDto?> GetElementById(int id)
+        public async Task<GuestDto?> GetElementById(int id)
         {
             var resultAsEntity = await _dal.GetOne(id);
 
@@ -61,7 +46,7 @@ namespace RestApi.Services
                 return resultAsEntity.ToDto();
         }
 
-        public Page<MovieDto?> GetPagedElements(int page, int nbElementsPerPage)
+        public Page<GuestDto?> GetPagedElements(int page, int nbElementsPerPage)
         {
             var resultsAsEntity = _dal.GetAll();
 
@@ -85,7 +70,6 @@ namespace RestApi.Services
             else
             {
                 var listOfResults = resultsAsEntity.Skip(page * nbElementsPerPage).Take(nbElementsPerPage).ToList().Select(x => x.ToDto()).ToList()!;
-                var toto = _dalRelation.GetAll().ToList();
 
                 int nextPage = page;
 

@@ -11,7 +11,7 @@ namespace RestApi.Services
 
         public TDto? DeleteElement(int id);
 
-        public TDto? UpdateElement(TDto element);
+        public Task<TDto?> UpdateElement(TDto element);
 
         public Task<TDto?> GetElementById(int id);
 

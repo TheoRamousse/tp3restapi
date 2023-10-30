@@ -46,13 +46,50 @@ namespace RestApi.Controllers
             }catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return BadRequest("Le corps de la requête est vide");
+                return BadRequest("Le corps de la requête est vide ou une date renseignée est invalide");
             }
 
             var validationErrors = MovieValidator.Validate(elementAsDto);
             if (validationErrors == null || validationErrors.Count() == 0)
             {
                 var result = _elementService.InsertElement(elementAsDto);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
+            else
+            {
+                return BadRequest(validationErrors);
+            }
+        }
+
+
+
+
+        [HttpPatch(Name = "PatchMovie")]
+        public IActionResult Patch([FromBody] object data)
+        {
+            MovieDto elementAsDto = null;
+            try
+            {
+                _logger.LogInformation(data.ToString());
+                elementAsDto = JsonConvert.DeserializeObject<MovieDto>(data.ToString());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest("Le corps de la requête est vide ou une date renseignée est invalide");
+            }
+
+            var validationErrors = MovieValidator.Validate(elementAsDto);
+            if (validationErrors == null || validationErrors.Count() == 0)
+            {
+                var result = _elementService.UpdateElement(elementAsDto);
                 if (result != null)
                 {
                     return Ok(result);

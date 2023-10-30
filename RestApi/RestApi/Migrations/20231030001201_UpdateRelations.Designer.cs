@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestApi.Models.Contexts;
 
@@ -10,12 +11,29 @@ using RestApi.Models.Contexts;
 namespace RestApi.Migrations
 {
     [DbContext(typeof(MovieContext))]
-    partial class MovieContextModelSnapshot : ModelSnapshot
+    [Migration("20231030001201_UpdateRelations")]
+    partial class UpdateRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.12");
+
+            modelBuilder.Entity("GuestEntityMovieEntity", b =>
+                {
+                    b.Property<int>("GuestsId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MoviesId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("GuestsId", "MoviesId");
+
+                    b.HasIndex("MoviesId");
+
+                    b.ToTable("GuestEntityMovieEntity");
+                });
 
             modelBuilder.Entity("RestApi.Models.Entities.GuestEntity", b =>
                 {
@@ -34,12 +52,7 @@ namespace RestApi.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("MovieEntityId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("MovieEntityId");
 
                     b.ToTable("Guests");
                 });
@@ -82,11 +95,19 @@ namespace RestApi.Migrations
                     b.ToTable("Relations");
                 });
 
-            modelBuilder.Entity("RestApi.Models.Entities.GuestEntity", b =>
+            modelBuilder.Entity("GuestEntityMovieEntity", b =>
                 {
+                    b.HasOne("RestApi.Models.Entities.GuestEntity", null)
+                        .WithMany()
+                        .HasForeignKey("GuestsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("RestApi.Models.Entities.MovieEntity", null)
-                        .WithMany("Guests")
-                        .HasForeignKey("MovieEntityId");
+                        .WithMany()
+                        .HasForeignKey("MoviesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RestApi.Models.Entities.RelationEntity", b =>
@@ -115,8 +136,6 @@ namespace RestApi.Migrations
 
             modelBuilder.Entity("RestApi.Models.Entities.MovieEntity", b =>
                 {
-                    b.Navigation("Guests");
-
                     b.Navigation("Relations");
                 });
 #pragma warning restore 612, 618

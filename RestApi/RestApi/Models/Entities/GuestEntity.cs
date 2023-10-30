@@ -10,7 +10,6 @@ namespace RestApi.Models.Entities
         public DateTime? BirthDate { get; set; }
 
         public List<RelationEntity> Relations { get; } = new();
-        public List<MovieEntity> Movies { get; } = new();
 
 
 
@@ -28,9 +27,9 @@ namespace RestApi.Models.Entities
             {
                 result.Movies.Add(new MovieSimplifiedDto()
                 {
-                    Name = Movies[i].Name,
-                    ReleaseDate = Movies[i].ReleaseDate,
-                    Id = Movies[i].Id,
+                    Name = Relations[i].Movie.Name,
+                    ReleaseDate = Relations[i].Movie.ReleaseDate,
+                    Id = Relations[i].Movie.Id,
                     Role = (RoleDto)Relations[i].Role
                 });
             }

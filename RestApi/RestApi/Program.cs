@@ -13,9 +13,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<MovieContext>();
-builder.Services.AddScoped<IDal<GuestEntity>, SqLiteDal<GuestEntity>>();
-builder.Services.AddScoped<IDal<MovieEntity>, SqLiteDal<MovieEntity>>();
+builder.Services.AddScoped<IDal<GuestEntity>, GuestDal>();
+builder.Services.AddScoped<IDal<MovieEntity>, MovieDal>();
+builder.Services.AddScoped<IDal<RelationEntity>, RelationDal>();
 builder.Services.AddScoped<IElementService<MovieDto, MovieEntity>, MovieService>();
+builder.Services.AddScoped<IElementService<GuestDto, GuestEntity>, GuestService>();
 
 var app = builder.Build();
 

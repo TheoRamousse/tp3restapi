@@ -25,12 +25,7 @@ namespace RestApi.DataAccessLayer
             return result.Entity;
         }
 
-        public T Update(T el)
-        {
-            var result = _movieContext.Update<T>(el);
-            _movieContext.SaveChanges();
-            return result.Entity;
-        }
+        public abstract T Update(T el);
 
         public T Delete(T el)
         {
@@ -39,7 +34,7 @@ namespace RestApi.DataAccessLayer
             return result.Entity;
         }
 
-        public abstract Task<T?> GetOne(T el);
+        public abstract Task<T?> GetOne(int id);
 
         public abstract IQueryable<T>? GetAll();
     }

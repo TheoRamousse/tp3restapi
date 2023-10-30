@@ -10,7 +10,7 @@
 
         public T Delete(T el);
 
-        public Task<T?> GetOne(T el);
+        public Task<T?> GetOne(int id);
 
         public IQueryable<T>? GetAll();
     }

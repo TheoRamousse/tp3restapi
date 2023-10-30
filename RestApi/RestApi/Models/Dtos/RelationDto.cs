@@ -12,8 +12,8 @@ namespace RestApi.Models.Dtos
         {
             return new RelationEntity()
             {
-                GuestsId = (int)Guest.Id,
-                MoviesId = (int)Movie.Id,
+                GuestId = (int)Guest.Id,
+                MovieId = (int)Movie.Id,
                 Role = ((int)Role)
             };
         }

@@ -33,9 +33,11 @@ namespace RestApi.Models.Dtos
 
             Guests.ForEach(g =>
             {
-                result.Guests.Add(new GuestEntity()
+                result.Relations.Add(new RelationEntity()
                 {
-                    Id = g.Id,
+                    GuestId = (int)g.Id,
+                    MovieId = (int)Id,
+                    Role = (int)g.Role,
 
                 });
 
