@@ -22,7 +22,20 @@ Clonez ce repository sur votre machine locale en utilisant la commande suivante 
 git clone https://gitlab.com/TheoRamousse/tp3restapi.git
 ```
 
-Pour finir, démarrer le projet C# sur VS2022 qui se trouve dans le dossier "RestApi".
+Ouvrir ensuite le projet C# sur VS2022 qui se trouve dans le dossier "RestApi".
+
+Se rendre ensuite dans Outils > Gestionnaire de packages Nugets > Gérer les packages de la solution et installer :
+- *Microsoft.EntityFrameworkCore.Sqlite* (en **version 7**) 
+- *Microsoft.EntityFrameworkCore.Tools* (en **version 7**) 
+
+
+Après cela rendez vous sur Outils > Gestionnaire de packages Nugets > Console.
+
+Taper la commande :
+```
+Update-Database
+```
+Vous pouvez ensuite démarrer la solution.
 
 Lac page du swagger apparaît sur laquelle vous pouvez tester l'intégralité des endpoints. Voici quelques données au format JSON que vous pouvez ajouter avec les méthodes POST : 
 
