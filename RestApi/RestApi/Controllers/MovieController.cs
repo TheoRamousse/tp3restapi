@@ -22,9 +22,10 @@ namespace RestApi.Controllers
         }
 
         [HttpGet("", Name = "GetPagedMovies")]
-        public IActionResult Get(int page, int itemInPage = 10)
+        public IActionResult Get(int page, int itemInPage = 10, string? name = "")
         {
-            var result = _elementService.GetPagedElements(page, itemInPage);
+            var dico = ComputeDictionary(name);
+            var result = _elementService.GetPagedElements(page, itemInPage, dico);
             if (result != null)
             {
                 return Ok(result);
@@ -33,6 +34,14 @@ namespace RestApi.Controllers
             {
                 return NoContent();
             }
+        }
+
+        private Dictionary<string, object> ComputeDictionary(string name)
+        {
+            return new Dictionary<string, object>()
+            {
+                { "name", name }
+            };
         }
 
         [HttpPost(Name = "AddMovie")]

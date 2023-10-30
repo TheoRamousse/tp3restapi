@@ -71,7 +71,7 @@ namespace RestApi.Services
                 return resultAsEntity.ToDto();
         }
 
-        public Page<GuestDto?> GetPagedElements(int page, int nbElementsPerPage)
+        public Page<GuestDto?> GetPagedElements(int page, int nbElementsPerPage, Dictionary<string, object> dico)
         {
             var resultsAsEntity = _dal.GetAll();
 
@@ -94,6 +94,11 @@ namespace RestApi.Services
             }
             else
             {
+                if (!string.IsNullOrEmpty(dico["firstname"] as string))
+                    resultsAsEntity = resultsAsEntity.Where(el => el.FirstName.Equals(dico["firstname"] as string, StringComparison.OrdinalIgnoreCase));
+                if (!string.IsNullOrEmpty(dico["lastname"] as string))
+                    resultsAsEntity = resultsAsEntity.Where(el => el.LastName.Equals(dico["lastname"] as string, StringComparison.OrdinalIgnoreCase));
+
                 var listOfResults = resultsAsEntity.Skip(page * nbElementsPerPage).Take(nbElementsPerPage).ToList().Select(x => x.ToDto()).ToList()!;
 
                 int nextPage = page;

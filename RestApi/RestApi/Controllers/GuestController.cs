@@ -22,9 +22,10 @@ namespace RestApi.Controllers
         }
 
         [HttpGet("", Name = "GetPagedGuests")]
-        public IActionResult Get(int page, int itemInPage = 10)
+        public IActionResult Get(int page, int itemInPage = 10, string? firstName = "", string? lastName = "")
         {
-            var result = _elementService.GetPagedElements(page, itemInPage);
+            var dico = ComputeDictionary(firstName, lastName);
+            var result = _elementService.GetPagedElements(page, itemInPage, dico);
             if (result != null)
             {
                 return Ok(result);
@@ -35,6 +36,14 @@ namespace RestApi.Controllers
             }
         }
 
+        private Dictionary<string, object> ComputeDictionary(string firstName, string lastName)
+        {
+            return new Dictionary<string, object>()
+            {
+                { "firstname", firstName },
+                { "lastname", lastName }
+            };
+        }
 
         [HttpPost(Name = "AddGuest")]
         public IActionResult Post([FromBody] object data)

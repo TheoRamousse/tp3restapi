@@ -15,7 +15,7 @@ namespace RestApi.Services
 
         public Task<TDto?> GetElementById(int id);
 
-        public Page<TDto?> GetPagedElements(int page, int nbElementsPerPage);
+        public Page<TDto?> GetPagedElements(int page, int nbElementsPerPage, Dictionary<string, object> dico);
 
     }
 }

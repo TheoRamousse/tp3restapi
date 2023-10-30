@@ -71,7 +71,7 @@ namespace RestApi.Services
                 return resultAsEntity.ToDto();
         }
 
-        public Page<MovieDto?> GetPagedElements(int page, int nbElementsPerPage)
+        public Page<MovieDto?> GetPagedElements(int page, int nbElementsPerPage, Dictionary<string, object> dico)
         {
             var resultsAsEntity = _dal.GetAll();
 
@@ -94,6 +94,9 @@ namespace RestApi.Services
             }
             else
             {
+                if(!string.IsNullOrEmpty(dico["name"] as string))
+                    resultsAsEntity = resultsAsEntity.Where(el => el.Name.Equals(dico["name"] as string, StringComparison.OrdinalIgnoreCase));
+
                 var listOfResults = resultsAsEntity.Skip(page * nbElementsPerPage).Take(nbElementsPerPage).ToList().Select(x => x.ToDto()).ToList()!;
 
                 int nextPage = page;
