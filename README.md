@@ -17,7 +17,24 @@ Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur 
 
 ## Installation
 
+Build le Dockerfile à la racine du dépot avec la commande :
+
+```bash
+docker build -t tp2-app-dotnet .
+```
+
+Lancer ensuite l'image Docker avec la commande :
+
+```bash
+ docker run -p 8088:80 tp2-app-dotnet
+```
+
+Le swagger se trouve à l'adresse http://localhost:8088/swagger/index.html
+
+**OU**
+
 Clonez ce repository sur votre machine locale en utilisant la commande suivante :
+
 ```bash
 git clone https://gitlab.com/TheoRamousse/tp3restapi.git
 ```
@@ -25,19 +42,21 @@ git clone https://gitlab.com/TheoRamousse/tp3restapi.git
 Ouvrir ensuite le projet C# sur VS2022 qui se trouve dans le dossier "RestApi".
 
 Se rendre ensuite dans Outils > Gestionnaire de packages Nugets > Gérer les packages de la solution et installer :
-- *Microsoft.EntityFrameworkCore.Sqlite* (en **version 7**) 
-- *Microsoft.EntityFrameworkCore.Tools* (en **version 7**) 
 
+- _Microsoft.EntityFrameworkCore.Sqlite_ (en **version 7**)
+- _Microsoft.EntityFrameworkCore.Tools_ (en **version 7**)
 
 Après cela rendez vous sur Outils > Gestionnaire de packages Nugets > Console.
 
 Taper la commande :
+
 ```
 Update-Database
 ```
+
 Vous pouvez ensuite démarrer la solution.
 
-Lac page du swagger apparaît sur laquelle vous pouvez tester l'intégralité des endpoints. Voici quelques données au format JSON que vous pouvez ajouter avec les méthodes POST : 
+Lac page du swagger apparaît sur laquelle vous pouvez tester l'intégralité des endpoints. Voici quelques données au format JSON que vous pouvez ajouter avec les méthodes POST :
 
 ```json
 {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RestApi.Models.Entities;
+using System.Reflection;
 
 namespace RestApi.Models.Contexts
 {
@@ -13,8 +14,7 @@ namespace RestApi.Models.Contexts
 
         public MovieContext()
         {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
-            var path = Environment.GetFolderPath(folder);
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             DbPath = System.IO.Path.Join(path, "movie.db");
         }
 
